@@ -1,0 +1,62 @@
+html, 
+body {
+    margin: 0;
+    padding: 0;
+}
+img {
+    border-radius: 10px;
+}
+
+/*
+Header
+*/
+
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+Game
+*/
+.game {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.human,
+.cpu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.human{
+    margin-left: 10%;
+}
+
+.cpu{
+    margin-right: 10%;
+}
+
+
+.chosen{
+    height: 400px;
+    width: auto;
+}
+.choices {
+    display: flex;
+}
+
+.choices img{
+    height: 100px;
+    width: auto;
+}
+
+
+.anounce{ 
+    text-align: center;
+}
