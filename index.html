@@ -5,38 +5,94 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script src="javascript.js"></script>
+    <!-- <script src="script.js"></script> -->
     <title>Rock Paper Scissors</title>
 </head>
 <body>
     <div class="header">
         <div class = "title">Elemental</div>
         <div class="sub-title"> Rock Paper Scissors but better</div>
+        <div class="sub-title"> First to five points wins</div>
     </div>
 
     <div class="game">
         <div class="human">
             <div class="name">YOU:</div>
             <div class="score">0</div>
-            <img class="chosen" src="/images/fire.png">
-
-            <div class="choices">
-                <img src="/images/fire.png">
-                <img src="/images/leaf.png">
-                <img src="/images/water.png">
+            <div class="choices" id="human-choices">
+                <img class = "human-img" id="one" src="/images/fire.png">
+                <img class = "human-img" id="two"src="/images/leaf.png">
+                <img class = "human-img" id="three"src="/images/water.png">
             </div>
         </div>
 
         <div class="cpu">
             <div class="name">CPU:</div>
             <div class="score">0</div>
-            <img class="chosen" src="/images/fire.png">
+            <div class="choices" id="cpu-choices">
+                <img src="/images/fire.png">
+                <img src="/images/leaf.png">
+                <img src="/images/water.png">
+            </div>
         </div>
     </div>
 
-    <div class = "anounce">
-        <div>Rock beats paper! Point to CPU</div>
+    <div class = "announce">
+        <button id ="confirm">Confirm</button>
+        <div>Rock beats paper! Point goes to CPU</div>
     </div>
+ 
+
     
 </body>
+
+
+<script>
+
+    const elements = ["Fire", "Leaf", "Water", 1, 2, 3];
+    computerSelection =  Math.floor(Math.random() * 3) + 1;
+
+    const choices = document.querySelectorAll('.human-img');
+    const button = document.querySelector('#confirm');
+    button.addEventListener('click', moveOn);
+
+    let currentChoice = 0;
+    let turnOpponent = false;
+
+    choices.forEach((choice) =>{
+        choice.addEventListener('click',addBorder);
+    });
+
+
+
+    function addBorder(element){
+        currentChoice = element.target.getAttribute('id');
+    }
+
+    function moveOn(button){
+        turnOpponent = true;
+        console.log(turnOpponent)
+        console.log(currentChoice);
+        
+    }
+
+    function userTurn(){
+        choices.forEach((choice) =>{
+            compareChoice = choice.getAttribute('id');
+            if (compareChoice == currentChoice){
+                choice.classList.add('picked');
+            }
+            else{
+                choice.classList.remove('picked');
+            }
+
+            if (turnOpponent == true){
+                clearInterval(interval);
+            }
+        });
+    }   
+    var interval = setInterval(userTurn, 10);
+
+</script>
+
 </html>
