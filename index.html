@@ -20,9 +20,9 @@
             <div class="name">YOU:</div>
             <div class="score">0</div>
             <div class="choices" id="human-choices">
-                <img class = "human-img" id="one" src="/images/fire.png">
+                <img class = "human-img" id="one" src="/images/water.png">
                 <img class = "human-img" id="two"src="/images/leaf.png">
-                <img class = "human-img" id="three"src="/images/water.png">
+                <img class = "human-img" id="three"src="/images/fire.png">
             </div>
         </div>
 
@@ -30,9 +30,9 @@
             <div class="name">CPU:</div>
             <div class="score">0</div>
             <div class="choices" id="cpu-choices">
-                <img src="/images/fire.png">
-                <img src="/images/leaf.png">
-                <img src="/images/water.png">
+                <img class = "cpu-img" id="one-c" src="/images/water.png">
+                <img class = "cpu-img" id="two-c"src="/images/leaf.png">
+                <img class = "cpu-img" id="three-c" src="/images/fire.png">
             </div>
         </div>
     </div>
@@ -49,15 +49,25 @@
 
 <script>
 
-    const elements = ["Fire", "Leaf", "Water", 1, 2, 3];
+    const elements = ["Water", "Leaf", "Fire"];
+    
     computerSelection =  Math.floor(Math.random() * 3) + 1;
-
+    let playerSelection;
+    
     const choices = document.querySelectorAll('.human-img');
+    const choicesComputer = document.querySelectorAll('.cpu-img');
     const button = document.querySelector('#confirm');
     button.addEventListener('click', moveOn);
 
     let currentChoice = 0;
     let turnOpponent = false;
+    let playerWin;
+    let winnerMessage;
+    let computerCount = 0;
+    let playerCount = 0;
+    var interval = setInterval(userTurn, 10);
+
+    
 
     choices.forEach((choice) =>{
         choice.addEventListener('click',addBorder);
@@ -70,10 +80,13 @@
     }
 
     function moveOn(button){
-        turnOpponent = true;
-        console.log(turnOpponent)
-        console.log(currentChoice);
-        
+        if(currentChoice!=0){
+            turnOpponent = true;
+            assignNumber();
+            console.log("HELLO");
+            cpuChoice();
+        }
+
     }
 
     function userTurn(){
@@ -91,7 +104,89 @@
             }
         });
     }   
-    var interval = setInterval(userTurn, 10);
+
+    function assignNumber(){
+        if (currentChoice == 'one'){
+            playerSelection = 1;
+            console.log(playerSelection);
+        }
+        else if(currentChoice == 'two'){
+            playerSelection = 2;
+            console.log(playerSelection);
+        }
+        else if(currentChoice == 'three'){
+            playerSelection = 3
+            console.log(playerSelection);
+        }
+        else{
+            console.log("something went wrong")
+        }
+
+    }
+
+
+    function cpuChoice(){
+        if (computerSelection == 1){
+            let onec = document.querySelector('#one-c');
+            onec.classList.add('picked');
+        }
+        else if(computerSelection ==2){
+            let twoc = document.querySelector('#two-c');
+            twoc.classList.add('picked');
+        }
+        else if(computerSelection == 3){
+            let threec = document.querySelector('#three-c');
+            threec.classList.add('picked');
+        }
+        else{
+            console.log("gay");
+        }
+        decideWinner();
+        
+    }
+
+    function decideWinner(){
+        if (parseInt(playerSelection) == 1 && computerSelection == 3 ){
+            playerWin = true;
+            winnerMessage = "You win!";
+            console.log(winnerMessage);
+            playerCount++;
+
+        } else if (parseInt(playerSelection) == 3 && computerSelection == 1){
+            playerWin = false;
+            winnerMessage = "Computer wins!";
+            console.log(winnerMessage);
+            computerCount++;
+
+        } else if (parseInt(playerSelection) > computerSelection){
+            playerWin = true;
+            winnerMessage = "You win!";
+            console.log(winnerMessage);
+            playerCount++;
+
+        } else if (parseInt(playerSelection) == computerSelection){
+            playerWin = false;
+            winnerMessage = "It's a tie!";
+            console.log(winnerMessage);
+
+        } else{
+            playerWin = false;
+            winnerMessage = "Computer wins!";
+            console.log(winnerMessage);
+            computerCount++;
+        }
+
+    }
+
+    function reset(){
+
+    }
+   
+
+    
+
+
+
 
 </script>
 
