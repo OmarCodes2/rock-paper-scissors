@@ -18,7 +18,7 @@
     <div class="game">
         <div class="human">
             <div class="name">YOU:</div>
-            <div class="score">0</div>
+            <div class="score" id="hScore"><div>0</div></div>
             <div class="choices" id="human-choices">
                 <img class = "human-img" id="one" src="/images/water.png">
                 <img class = "human-img" id="two"src="/images/leaf.png">
@@ -28,7 +28,7 @@
 
         <div class="cpu">
             <div class="name">CPU:</div>
-            <div class="score">0</div>
+            <div class="score" id="cScore"><div>0</div></div>
             <div class="choices" id="cpu-choices">
                 <img class = "cpu-img" id="one-c" src="/images/water.png">
                 <img class = "cpu-img" id="two-c"src="/images/leaf.png">
@@ -38,7 +38,7 @@
     </div>
 
     <div class = "announce">
-        <button id ="confirm">Confirm</button>
+        <button id ="confirm"><div>Confirm</div></button>
         <div>Rock beats paper! Point goes to CPU</div>
     </div>
  
@@ -49,74 +49,84 @@
 
 <script>
 
-    const elements = ["Water", "Leaf", "Fire"];
+    let computerSelection; //Generate a random no from 1-3
+    let playerSelection = 0;
     
-    computerSelection =  Math.floor(Math.random() * 3) + 1;
-    let playerSelection;
+    let playerPoints = 0;
+    let computerPoints = 0;
+
+    let playerConfirmation = false; //player did not confirm their choice
+    let nextRound = false;
     
+    let winningCombos = ["21","32","13"];
+
     const choices = document.querySelectorAll('.human-img');
-    const choicesComputer = document.querySelectorAll('.cpu-img');
+    const computerChoices = document.querySelectorAll('.cpu-img');
     const button = document.querySelector('#confirm');
-    button.addEventListener('click', moveOn);
 
-    let currentChoice = 0;
-    let turnOpponent = false;
-    let playerWin;
-    let winnerMessage;
-    let computerCount = 0;
-    let playerCount = 0;
-    var interval = setInterval(userTurn, 10);
+    const playerScore = document.querySelector('#hScore');
+    const computerScore = document.querySelector('#cScore');
+
+    updateScore();
+
+
 
     
-
+    button.addEventListener('click', moveOn);
     choices.forEach((choice) =>{
-        choice.addEventListener('click',addBorder);
+        choice.addEventListener('click', select);
     });
 
 
 
-    function addBorder(element){
-        currentChoice = element.target.getAttribute('id');
-    }
-
-    function moveOn(button){
-        if(currentChoice!=0){
-            turnOpponent = true;
-            assignNumber();
-            console.log("HELLO");
-            cpuChoice();
+    function moveOn(){
+        if (playerConfirmation == true){
+            nextRound = true;
+        }
+        
+        if (playerSelection != 0 && playerConfirmation == false){
+            playerConfirmation = true;
+            computerChoice();
+            decideWinner();
+            updateButton(1);
         }
 
+        
+        if (playerConfirmation == true && nextRound == true){
+            reset();
+
+        }
     }
 
-    function userTurn(){
-        choices.forEach((choice) =>{
-            compareChoice = choice.getAttribute('id');
-            if (compareChoice == currentChoice){
-                choice.classList.add('picked');
-            }
-            else{
-                choice.classList.remove('picked');
-            }
 
-            if (turnOpponent == true){
-                clearInterval(interval);
-            }
-        });
-    }   
+    function select(choice){
+        playerSelection = choice.target.getAttribute('id');
+        
+        if (playerConfirmation == false){
+            choices.forEach((choice) =>{
+                
+                let compareChoice = choice.getAttribute('id');
+                if (compareChoice == playerSelection){
+                    choice.classList.add('picked');
+                    assignNumber(compareChoice);
+                }
+                else{
+                    choice.classList.remove('picked');
+                }
 
-    function assignNumber(){
+            });
+        }
+    }
+    
+    function assignNumber(currentChoice){
         if (currentChoice == 'one'){
             playerSelection = 1;
-            console.log(playerSelection);
         }
         else if(currentChoice == 'two'){
             playerSelection = 2;
-            console.log(playerSelection);
         }
         else if(currentChoice == 'three'){
             playerSelection = 3
-            console.log(playerSelection);
         }
         else{
             console.log("something went wrong")
@@ -125,7 +135,8 @@
     }
 
 
-    function cpuChoice(){
+    function computerChoice(){
+        computerSelection = Math.floor(Math.random() * 3) + 1;
         if (computerSelection == 1){
             let onec = document.querySelector('#one-c');
             onec.classList.add('picked');
@@ -138,55 +149,77 @@
             let threec = document.querySelector('#three-c');
             threec.classList.add('picked');
         }
-        else{
-            console.log("gay");
-        }
-        decideWinner();
+
         
     }
 
     function decideWinner(){
-        if (parseInt(playerSelection) == 1 && computerSelection == 3 ){
-            playerWin = true;
-            winnerMessage = "You win!";
-            console.log(winnerMessage);
-            playerCount++;
-
-        } else if (parseInt(playerSelection) == 3 && computerSelection == 1){
-            playerWin = false;
-            winnerMessage = "Computer wins!";
-            console.log(winnerMessage);
-            computerCount++;
-
-        } else if (parseInt(playerSelection) > computerSelection){
-            playerWin = true;
-            winnerMessage = "You win!";
-            console.log(winnerMessage);
-            playerCount++;
-
-        } else if (parseInt(playerSelection) == computerSelection){
-            playerWin = false;
-            winnerMessage = "It's a tie!";
-            console.log(winnerMessage);
-
-        } else{
-            playerWin = false;
-            winnerMessage = "Computer wins!";
-            console.log(winnerMessage);
-            computerCount++;
+        let combo = playerSelection.toString() +  computerSelection.toString();
+        if (winningCombos.includes(combo) == true){
+            console.log("Player wins");
+            playerPoints++;
+            console.log(playerPoints, computerPoints);
+            updateScore();
         }
+        else if(playerSelection == computerSelection){
+            console.log("Tie");
+            console.log(playerPoints, computerPoints);
+        }
+        else{
+            console.log("Computer wins");
+            computerPoints++;
+            console.log(playerPoints, computerPoints);
+            updateScore();
+        }
+    }
+    
+    
+    function updateScore(){
+        playerScore.removeChild(playerScore.firstElementChild);
+        computerScore.removeChild(computerScore.firstElementChild);
+
+        const currentPlayerScore = document.createElement('div');
+        const currentComputerScore = document.createElement('div');
+
+        currentPlayerScore.textContent =playerPoints.toString();
+        currentComputerScore.textContent =computerPoints.toString();
+
+        playerScore.appendChild(currentPlayerScore);
+        computerScore.appendChild(currentComputerScore);
+    }
+
+    function updateButton(optionNo){
+        button.removeChild(button.firstElementChild);
+        const newButton = document.createElement('div');
+        if (optionNo == 1){
+            newButton.textContent = "Next Round";
+        }
+        else{
+            newButton.textContent = "Confirm Choice";
+        }
+        button.appendChild(newButton);
 
     }
 
     function reset(){
+        playerSelection = 0;
+        playerConfirmation = false;
+        nextRound = false;
+        updateButton(2);
+        choices.forEach((choice)=>{
+                choice.classList.remove('picked');
+        });
+        computerChoices.forEach((choice)=>{
+                choice.classList.remove('picked');
+        });
 
+        if (playerPoints == 5 || computerPoints == 5){
+            button.removeEventListener('click', moveOn);
+            choices.forEach((choice)=>{
+                choice.removeEventListener('click', select);
+            });
+        }
     }
-   
-
-    
-
-
-
 
 </script>
 
