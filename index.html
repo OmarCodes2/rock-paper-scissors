@@ -39,7 +39,7 @@
 
     <div class = "announce">
         <button id ="confirm"><div>Confirm</div></button>
-        <div>Rock beats paper! Point goes to CPU</div>
+        <div class="message"><div>Rock beats paper! Point goes to CPU</div></div>
     </div>
  
 
@@ -58,16 +58,19 @@
     let playerConfirmation = false; //player did not confirm their choice
     let nextRound = false;
     
-    let winningCombos = ["21","32","13"];
+    const winningCombos = ["21","32","13"];
+    const elements = ["Water", "Leaf", "Fire"];
 
     const choices = document.querySelectorAll('.human-img');
     const computerChoices = document.querySelectorAll('.cpu-img');
     const button = document.querySelector('#confirm');
+    const message = document.querySelector('.message');
 
     const playerScore = document.querySelector('#hScore');
     const computerScore = document.querySelector('#cScore');
 
     updateScore();
+    updateMessage("Choose an element");
 
 
 
@@ -155,21 +158,28 @@
 
     function decideWinner(){
         let combo = playerSelection.toString() +  computerSelection.toString();
+        let roundMessage;
         if (winningCombos.includes(combo) == true){
             console.log("Player wins");
             playerPoints++;
             console.log(playerPoints, computerPoints);
             updateScore();
+            roundMessage = elements[playerSelection-1] + " beats " + elements[computerSelection-1]+". Point goes to you!"
+            updateMessage(roundMessage);
         }
         else if(playerSelection == computerSelection){
             console.log("Tie");
             console.log(playerPoints, computerPoints);
+            updateMessage("It's a tie. No points awarded this round.");
         }
         else{
             console.log("Computer wins");
             computerPoints++;
             console.log(playerPoints, computerPoints);
             updateScore();
+            
+            roundMessage = elements[computerSelection-1] + " beats " + elements[playerSelection-1]+". Point goes to CPU!"
+            updateMessage(roundMessage);           
         }
     }
     
@@ -201,22 +211,34 @@
 
     }
 
-    function reset(){
-        playerSelection = 0;
-        playerConfirmation = false;
-        nextRound = false;
-        updateButton(2);
-        choices.forEach((choice)=>{
-                choice.classList.remove('picked');
-        });
-        computerChoices.forEach((choice)=>{
-                choice.classList.remove('picked');
-        });
+    function updateMessage(roundMessage){
+        message.removeChild(message.firstElementChild);
+        const newMessage = document.createElement('div');
+        newMessage.textContent = roundMessage;
+        message.appendChild(newMessage);
 
+    }
+
+    function reset(){
         if (playerPoints == 5 || computerPoints == 5){
             button.removeEventListener('click', moveOn);
             choices.forEach((choice)=>{
                 choice.removeEventListener('click', select);
+            });
+        }
+        else{
+            playerSelection = 0;
+            playerConfirmation = false;
+            nextRound = false;
+            
+            updateButton(2);
+            updateMessage("Choose an element");
+            
+            choices.forEach((choice)=>{
+                choice.classList.remove('picked');
+            });
+            computerChoices.forEach((choice)=>{
+                choice.classList.remove('picked');
             });
         }
     }
