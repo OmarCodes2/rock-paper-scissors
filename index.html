@@ -26,6 +26,10 @@
             </div>
         </div>
 
+        <div class = "center"> 
+            <button id ="confirm"><div>Confirm</div></button>
+        </div>
+
         <div class="cpu">
             <div class="name">CPU:</div>
             <div class="score" id="cScore"><div>0</div></div>
@@ -38,7 +42,6 @@
     </div>
 
     <div class = "announce">
-        <button id ="confirm"><div>Confirm</div></button>
         <div class="message"><div>Rock beats paper! Point goes to CPU</div></div>
     </div>
  
@@ -91,7 +94,11 @@
             playerConfirmation = true;
             computerChoice();
             decideWinner();
-            updateButton(1);
+            if (playerPoints != 5 || computerPoints != 5){
+                console.log(playerPoints, computerPoints);
+                updateButton(1);
+            }
+            
         }
 
         
@@ -204,6 +211,9 @@
         if (optionNo == 1){
             newButton.textContent = "Next Round";
         }
+        else if (optionNo == 2){
+            newButton.textContent = "NEW GAME";
+        }
         else{
             newButton.textContent = "Confirm Choice";
         }
@@ -222,16 +232,27 @@
     function reset(){
         if (playerPoints == 5 || computerPoints == 5){
             button.removeEventListener('click', moveOn);
+            button.addEventListener('click', ()=>{
+                location.reload();
+            });
             choices.forEach((choice)=>{
                 choice.removeEventListener('click', select);
             });
+            if (playerPoints>computerPoints){
+                updateMessage("PLAYER WINS. CLICK BUTTON TO RESTART");
+            }
+            else{
+                updateMessage("CPU WINS. CLICK BUTTON TO RESTART");
+            }
+            updateButton(2);
+
         }
         else{
             playerSelection = 0;
             playerConfirmation = false;
             nextRound = false;
             
-            updateButton(2);
+            updateButton(3);
             updateMessage("Choose an element");
             
             choices.forEach((choice)=>{
