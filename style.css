@@ -25,11 +25,12 @@ Header
 Game
 */
 .game {
+    width: 100vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: white;
-    gap: 20px;
+    gap: 5vw;
     flex-shrink: 1;
     
 }
@@ -43,11 +44,11 @@ Game
 }
 
 .human{
-    margin-left: 10%;
+    margin-left: 5vw;
 }
 
 .cpu{
-    margin-right: 10%;
+    margin-right: 5vw;
 }
 
 
@@ -57,22 +58,22 @@ Game
     width: auto;
 }
 .choices {
-    margin-top: 20px;
+    margin-top: 2vh;
     display: flex;
-    gap: 20px;
+    gap: 2vw;
 }
 .picked{
     background-color: rgb(255, 255, 255);
 }
 
 .choices img{
-    height: 200px;
+    height: 20vh;
     width: auto;
     border: 2px solid white;
 }
 
 #human-choices img:hover{
-    height: 200px;
+    height: 20vh;
     width: auto;
     border: 2px solid rgb(163, 0, 0);
 }
